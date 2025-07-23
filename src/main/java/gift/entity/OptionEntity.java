@@ -33,6 +33,10 @@ public class OptionEntity {
     @JoinColumn(name = "productId")
     private ProductEntity productEntity;
 
+    public ProductEntity getProductEntity() {
+        return productEntity;
+    }
+
     public Option toDomain() {
         return new Option(
                 id,

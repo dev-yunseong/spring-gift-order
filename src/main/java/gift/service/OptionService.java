@@ -1,6 +1,7 @@
 package gift.service;
 
 import gift.domain.Option;
+import gift.domain.Product;
 import gift.dto.OptionRequestDto;
 import gift.dto.OptionResponseDto;
 import gift.entity.OptionEntity;
@@ -36,17 +37,29 @@ public class OptionService {
         ProductEntity productEntity = productRepository.findWithOptionsById(productId)
                 .orElseThrow(() -> new IllegalArgumentException("Product Not Found"));
 
-        boolean isExist = productEntity.getOptionEntities()
+        if (productEntity.isPending()) {
+            throw new IllegalArgumentException("Product is Not Approved");
+        }
+
+        List<OptionEntity> optionEntities = productEntity.getOptionEntities();
+
+        boolean isEmpty = optionEntities.isEmpty();
+
+        boolean isDuplicated = optionEntities
                 .stream().anyMatch(
                         optionEntity -> optionEntity.getName().equals(optionRequestDto.name())
                 );
 
-        if (isExist) {
+        if (isDuplicated) {
             throw new IllegalArgumentException("Duplicated Option's name");
         }
 
         OptionEntity optionEntity = new OptionEntity(optionRequestDto.name(), optionRequestDto.quantity(), productEntity);
         optionRepository.save(optionEntity);
+
+        if (isEmpty) {
+            productEntity.updateStatus(Product.Status.READY);
+        }
     }
 
     public void subtractOptionQuantity(long optionId, int quantity) {
@@ -59,6 +72,8 @@ public class OptionService {
 
         if (resultQuantity == 0) {
             optionRepository.deleteById(optionId);
+            ProductEntity productEntity = optionEntity.getProductEntity();
+            productEntity.updateStatus(Product.Status.APPROVED);
         }
     }
 }

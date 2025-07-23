@@ -3,9 +3,10 @@ package gift.domain;
 public class Product {
 
     public enum Status {
-        APPROVED,
-        PENDING,
-        REJECTED
+        READY, // 사용 가능 상태 [Option도 등록 완료]
+        APPROVED, // 내부 승인 됨
+        PENDING, // MD에 의해 검토 필요
+        REJECTED // MD에 의해 거절 당함
     }
 
     private Long id;
@@ -51,10 +52,10 @@ public class Product {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
-        status = inferStatus(name);
+        status = inferStatusWithName(name);
     }
 
-    private Status inferStatus(String name) {
+    private Status inferStatusWithName(String name) {
         if (name.contains("카카오")) {
             return Product.Status.PENDING;
         } else {

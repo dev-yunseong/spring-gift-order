@@ -3,6 +3,7 @@ package gift.entity;
 import gift.domain.Product;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -43,10 +44,14 @@ public class ProductEntity {
     private Product.Status status;
 
     @OneToMany(mappedBy = "productEntity")
-    private List<OptionEntity> optionEntities;
+    private List<OptionEntity> optionEntities = new ArrayList<>();
 
     public List<OptionEntity> getOptionEntities() {
         return optionEntities;
+    }
+
+    public void addOptionEntity(OptionEntity optionEntity) {
+        optionEntities.add(optionEntity);
     }
 
     public Product.Status getStatus() {
@@ -59,6 +64,10 @@ public class ProductEntity {
 
     public boolean isApproved() {
         return status == Product.Status.APPROVED;
+    }
+
+    public boolean isPending() {
+        return status == Product.Status.PENDING;
     }
 
     protected ProductEntity() {}
