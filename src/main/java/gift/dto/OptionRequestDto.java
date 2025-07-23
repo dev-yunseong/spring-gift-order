@@ -1,14 +1,10 @@
 package gift.dto;
 
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import org.hibernate.validator.constraints.Length;
+import jakarta.validation.constraints.*;
 
 public record OptionRequestDto(
-        @Length(max = 50)
         @NotBlank
+        @Size(max = 50)
         @Pattern(regexp = "^[a-zA-Z0-9가-힣()\\[\\]+&/ _-]+$")
         String name,
         @Min(1)
