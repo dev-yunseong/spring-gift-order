@@ -13,7 +13,9 @@ import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
     @EntityGraph(attributePaths = "optionEntities")
-    Optional<ProductEntity> findWithOptionsById(long id);
+    Optional<ProductEntity> findWithOptionsById(Long id);
+
+    Page<ProductEntity> findAllByStatus(Product.Status status, Pageable pageable);
 
     @Query("""
         SELECT DISTINCT p

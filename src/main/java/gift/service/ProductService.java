@@ -45,7 +45,7 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public List<ProductResponseDto> findReadyProducts(Pageable pageable) {
-        return productRepository.findAllByStatusHavingOptions(Product.Status.APPROVED, pageable).stream()
+        return productRepository.findAllByStatus(Product.Status.READY, pageable).stream()
                 .map(ProductResponseDto::new)
                 .toList();
     }
@@ -69,5 +69,9 @@ public class ProductService {
                 .orElseThrow(() -> new IllegalArgumentException("Product Not Found"));
 
         productEntity.updateStatus(statusPatchRequestDto.status());
+    }
+
+    public void updateStatus() {
+
     }
 }
