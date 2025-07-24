@@ -1,6 +1,6 @@
 package gift.dto;
 
-import gift.domain.Member;
+import gift.domain.member.EmailMember;
 import jakarta.validation.constraints.Email;
 
 public record MemberRequestDto(
@@ -8,7 +8,7 @@ public record MemberRequestDto(
         String email,
         String password
 ) {
-        public Member toDomain() {
-                return new Member(email, password);
+        public EmailMember toDomain() {
+                return new EmailMember(email, password);
         }
 }

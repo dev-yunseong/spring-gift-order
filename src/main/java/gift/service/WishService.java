@@ -2,10 +2,10 @@ package gift.service;
 
 import gift.dto.ProductResponseDto;
 import gift.dto.WishResponseDto;
-import gift.entity.MemberEntity;
+import gift.entity.member.MemberEntity;
 import gift.entity.ProductEntity;
 import gift.entity.WishEntity;
-import gift.repository.MemberRepository;
+import gift.repository.EmailMemberRepository;
 import gift.repository.ProductRepository;
 import gift.repository.WishRepository;
 import org.springframework.data.domain.Pageable;
@@ -20,12 +20,12 @@ public class WishService {
 
     public final WishRepository wishRepository;
     public final ProductRepository productRepository;
-    public final MemberRepository memberRepository;
+    public final EmailMemberRepository emailMemberRepository;
 
-    public WishService(WishRepository wishRepository, ProductRepository productRepository, MemberRepository memberRepository) {
+    public WishService(WishRepository wishRepository, ProductRepository productRepository, EmailMemberRepository emailMemberRepository) {
         this.wishRepository = wishRepository;
         this.productRepository = productRepository;
-        this.memberRepository = memberRepository;
+        this.emailMemberRepository = emailMemberRepository;
     }
 
     public void saveWish(long memberId, long productId, int count) {
@@ -37,7 +37,7 @@ public class WishService {
             throw new IllegalArgumentException("Wish is Already Existed");
         }
 
-        MemberEntity memberEntity = memberRepository.findById(memberId)
+        MemberEntity memberEntity = emailMemberRepository.findById(memberId)
                         .orElseThrow(() -> new IllegalArgumentException("Member Not Found"));
         ProductEntity productEntity = productRepository.findById(productId)
                         .orElseThrow(() -> new IllegalArgumentException("Product Not Found"));

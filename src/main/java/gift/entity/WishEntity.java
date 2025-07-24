@@ -1,5 +1,6 @@
 package gift.entity;
 
+import gift.entity.member.MemberEntity;
 import jakarta.persistence.*;
 
 @Entity

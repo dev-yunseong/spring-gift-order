@@ -2,7 +2,7 @@ package gift.service;
 
 import gift.dto.AuthResponseDto;
 import gift.dto.MemberRequestDto;
-import gift.domain.Member;
+import gift.domain.member.Member;
 import gift.security.JwtTokenProvider;
 import org.springframework.stereotype.Service;
 

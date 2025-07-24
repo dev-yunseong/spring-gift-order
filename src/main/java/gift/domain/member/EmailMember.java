@@ -1,9 +1,9 @@
-package gift.domain;
+package gift.domain.member;
 
 import org.mindrot.jbcrypt.BCrypt;
 
-public class Member {
-    private final Long id;
+public class EmailMember extends Member {
+
     private final String email;
     private final String passwordHash;
 
@@ -23,16 +23,16 @@ public class Member {
         return passwordHash;
     }
 
-    public Member(String email, String password) {
-        this.id = null;
+    public EmailMember(String email, String password) {
+        super(null);
         this.email = email;
         this.passwordHash = BCrypt.hashpw(
                 password,
                 BCrypt.gensalt());
     }
 
-    public Member(Long id, String email, String passwordHash) {
-        this.id = id;
+    public EmailMember(Long id, String email, String passwordHash) {
+        super(id);
         this.email = email;
         this.passwordHash = passwordHash;
     }

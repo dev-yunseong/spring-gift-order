@@ -7,9 +7,20 @@ CREATE TABLE products (
 );
 
 CREATE TABLE members (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    id BIGINT PRIMARY KEY AUTO_INCREMENT
+);
+
+CREATE TABLE email_members (
+    id BIGINT PRIMARY KEY REFERENCES members(id),
     email VARCHAR(30) NOT NULL UNIQUE,
     password_hash CHAR(60) NOT NULL
+);
+
+CREATE TABLE kakao_members (
+    id BIGINT PRIMARY KEY REFERENCES members(id),
+    kakao_id BIGINT NOT NULL UNIQUE,
+    nickname VARCHAR(30) NOT NULL UNIQUE,
+    profile_image VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE wishes (
