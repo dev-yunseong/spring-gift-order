@@ -22,6 +22,15 @@ public class KakaoUserInfoResponseDto {
         return kakaoAccount;
     }
 
+    public KakaoUserInfoResponseDto(Long id, String nickname, String profileImageUrl) {
+        this.id = id;
+        this.kakaoAccount = new KakaoAccount();
+        this.kakaoAccount.profile = new KakaoAccount.Profile();
+        this.kakaoAccount.profile.profileImageUrl = profileImageUrl;
+        this.kakaoAccount.profile.nickname = nickname;
+    }
+
+
     public static class KakaoAccount {
 
         private Profile profile;
