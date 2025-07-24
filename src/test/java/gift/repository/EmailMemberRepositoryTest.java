@@ -1,8 +1,7 @@
 package gift.repository;
 
-import gift.domain.member.EmailMember;
 import gift.entity.member.EmailMemberEntity;
-import gift.entity.member.MemberEntity;
+import gift.repository.member.EmailMemberRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;

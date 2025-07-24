@@ -5,7 +5,7 @@ import gift.dto.WishResponseDto;
 import gift.entity.member.MemberEntity;
 import gift.entity.ProductEntity;
 import gift.entity.WishEntity;
-import gift.repository.EmailMemberRepository;
+import gift.repository.member.EmailMemberRepository;
 import gift.repository.ProductRepository;
 import gift.repository.WishRepository;
 import org.springframework.data.domain.Pageable;
