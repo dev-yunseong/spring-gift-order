@@ -1,8 +1,12 @@
 # spring-gift-order
-> 기본 코드 준비
+> 카카오 로그인
 ## 기능 요구 사항
-* spring gift enhancement에서 코드 가져오기
-* 저번 Step3 에서 받은 리뷰 반영
-  * Option Response Dto의 어노테이션 의존성 통일
-  * application.yml 중복 수정
-  * Status 다양화
+* 카카오 API에 등록
+  * 카카오 로그인 활성화
+  * Redirect URI 등록
+  * 접근 권한 설정
+  * Web 플랫폼 등록
+* 카카오 로그인 플로우
+  * 카카오계정 로그인을 통해 인가 코드 받기
+  * 인가 코드로 토큰 받기
+  * KakaoMember로 저장, Email Member와 또 다른 flow로 로그인, 회원 가입
