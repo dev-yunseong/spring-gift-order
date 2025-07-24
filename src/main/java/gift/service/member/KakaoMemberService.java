@@ -6,6 +6,8 @@ import gift.repository.member.KakaoMemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @Transactional
 public class KakaoMemberService {
@@ -17,23 +19,16 @@ public class KakaoMemberService {
     }
 
     public KakaoMember registerOrLogin(KakaoMember kakaoMember) {
-        if (kakaoMemberRepository.findByKakaoId(kakaoMember.getKakaoId()).isPresent()) {
-            return login(kakaoMember);
+        Optional<KakaoMemberEntity> optionalKakaoMemberEntity = kakaoMemberRepository.findByKakaoId(kakaoMember.getKakaoId());
+        if (optionalKakaoMemberEntity.isEmpty()) {
+            return creatMember(kakaoMember);
         }
-        return creatMember(kakaoMember);
+        return optionalKakaoMemberEntity.get().toDomain();
     }
 
     private KakaoMember creatMember(KakaoMember kakaoMember) {
         KakaoMemberEntity kakaoMemberEntity = new KakaoMemberEntity(kakaoMember);
         KakaoMemberEntity savedKakaoMemberEntity = kakaoMemberRepository.save(kakaoMemberEntity);
-
-        return savedKakaoMemberEntity.toDomain();
-    }
-
-    @Transactional(readOnly = true)
-    protected KakaoMember login(KakaoMember kakaoMember) {
-        KakaoMemberEntity savedKakaoMemberEntity = kakaoMemberRepository.findByKakaoId(kakaoMember.getKakaoId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 멤버입니다."));
 
         return savedKakaoMemberEntity.toDomain();
     }
