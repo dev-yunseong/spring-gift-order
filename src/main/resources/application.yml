@@ -29,3 +29,6 @@ spring:
     password:
 jwt:
   secretKey: Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E=
+kakao:
+  rest-api-key: [user-rest-api-key]
+  redirect-url: http://localhost:8080/oauth/kakao/callback

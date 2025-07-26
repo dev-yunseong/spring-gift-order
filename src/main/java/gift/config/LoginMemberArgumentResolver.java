@@ -1,6 +1,7 @@
 package gift.config;
 
-import gift.service.MemberService;
+import gift.service.member.CommonMemberService;
+import gift.service.member.EmailMemberService;
 import gift.security.JwtTokenProvider;
 import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.core.MethodParameter;
@@ -15,9 +16,9 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
     private static final String AUTHORIZATION_PREFIX = "Bearer ";
 
     private final JwtTokenProvider jwtTokenProvider;
-    private final MemberService memberService;
+    private final CommonMemberService memberService;
 
-    public LoginMemberArgumentResolver(JwtTokenProvider jwtTokenProvider, MemberService memberService) {
+    public LoginMemberArgumentResolver(JwtTokenProvider jwtTokenProvider, CommonMemberService memberService) {
         this.jwtTokenProvider = jwtTokenProvider;
         this.memberService = memberService;
     }
@@ -36,7 +37,7 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
          }
 
          String token = authorizationHeader.substring(AUTHORIZATION_PREFIX.length());
-        long memberId = jwtTokenProvider.parseJwtToken(token).getId();
+         long memberId = jwtTokenProvider.parseJwtToken(token).getId();
 
         return memberService.getMember(memberId);
     }

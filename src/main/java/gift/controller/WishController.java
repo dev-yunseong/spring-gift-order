@@ -3,7 +3,7 @@ package gift.controller;
 import gift.config.LoginMember;
 import gift.dto.WishRequestDto;
 import gift.dto.WishesResponseDto;
-import gift.domain.Member;
+import gift.domain.member.Member;
 import gift.service.WishService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;

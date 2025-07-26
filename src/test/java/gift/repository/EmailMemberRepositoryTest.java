@@ -1,6 +1,7 @@
 package gift.repository;
 
-import gift.entity.MemberEntity;
+import gift.entity.member.EmailMemberEntity;
+import gift.repository.member.EmailMemberRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -11,15 +12,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DataJpaTest
-public class MemberRepositoryTest {
+public class EmailMemberRepositoryTest {
 
     @Autowired
-    private MemberRepository memberRepository;
+    private EmailMemberRepository emailMemberRepository;
 
     @Test
     void saveTest() {
-        MemberEntity memberEntity = new MemberEntity(null,"memberSave@demo", "password");
-        MemberEntity actualMemberEntity = memberRepository.save(memberEntity);
+        EmailMemberEntity memberEntity = new EmailMemberEntity(null,"memberSave@demo", "password");
+        EmailMemberEntity actualMemberEntity = emailMemberRepository.save(memberEntity);
 
         assertAll(
                 () -> assertThat(actualMemberEntity.toDomain().getId()).isNotNull(),
@@ -31,10 +32,10 @@ public class MemberRepositoryTest {
     @Test
     void findByEmailTest() {
         String email = "memberFindByEmail@demo";
-        MemberEntity memberEntity = new MemberEntity(null, email, "password");
-        memberRepository.save(memberEntity);
+        EmailMemberEntity memberEntity = new EmailMemberEntity(null, email, "password");
+        emailMemberRepository.save(memberEntity);
 
-        Optional<MemberEntity> optionalMemberEntity = memberRepository.findByEmail(email);
+        Optional<EmailMemberEntity> optionalMemberEntity = emailMemberRepository.findByEmail(email);
 
         assertAll(
                 () -> assertThat(optionalMemberEntity.isPresent()).isTrue(),
@@ -45,10 +46,10 @@ public class MemberRepositoryTest {
     @Test
     void findByIdTest() {
         String email = "memberFindByEmail@demo";
-        MemberEntity memberEntity = new MemberEntity(null, email, "password");
-        MemberEntity savedMemberEntity = memberRepository.save(memberEntity);
+        EmailMemberEntity memberEntity = new EmailMemberEntity(null, email, "password");
+        EmailMemberEntity savedMemberEntity = emailMemberRepository.save(memberEntity);
 
-        Optional<MemberEntity> optionalMemberEntity = memberRepository.findById(savedMemberEntity.toDomain().getId());
+        Optional<EmailMemberEntity> optionalMemberEntity = emailMemberRepository.findById(savedMemberEntity.toDomain().getId());
 
         assertAll(
                 () -> assertThat(optionalMemberEntity.isPresent()).isTrue(),
