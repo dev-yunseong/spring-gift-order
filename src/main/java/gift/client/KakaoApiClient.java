@@ -1,5 +1,8 @@
 package gift.client;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import gift.dto.KakaoTemplateObjectDto;
 import gift.dto.KakaoTokenResponseDto;
 import gift.dto.KakaoUserInfoResponseDto;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,9 +19,11 @@ public class KakaoApiClient {
 
     private static final String KAKAO_TOKEN_URL = "https://kauth.kakao.com/oauth/token";
     private static final String KAKAO_USER_INFO_URL = "https://kapi.kakao.com/v2/user/me";
+    private static final String KAKAO_SEND_MESSAGE_TO_ME = "https://kapi.kakao.com/v2/api/talk/memo/default/send";
 
     private static final String TOKEN_PREFIX = "Bearer ";
 
+    private final ObjectMapper objectMapper = new ObjectMapper();
     private final RestClient restClient;
     private final String clientId;
     private final String redirectUrl;
@@ -64,5 +69,30 @@ public class KakaoApiClient {
         }
 
         return responseEntity.getBody();
+    }
+
+    public void sendKakaoMessage(String accessToken, KakaoTemplateObjectDto kakaoTemplateObjectDto) {
+        MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
+
+        try {
+            String jsonString = objectMapper.writeValueAsString(kakaoTemplateObjectDto);
+            formData.add("template_object", jsonString);
+            System.out.println(jsonString);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        RestClient.ResponseSpec responseSpec = restClient.post()
+                .uri(KAKAO_SEND_MESSAGE_TO_ME)
+                .header(HttpHeaders.AUTHORIZATION, TOKEN_PREFIX + accessToken)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                .body(formData)
+                .retrieve();
+
+        ResponseEntity<Void> responseEntity = responseSpec.toEntity(Void.class);
+
+        if (responseEntity.getStatusCode().isError()) {
+            throw new IllegalStateException("Fail To Send Message");
+        }
     }
 }
