@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Transactional
 @Service
@@ -56,6 +57,13 @@ public class WishService {
         }
 
         wishEntity.updateWishCount(count);
+    }
+
+    public int getWishCount(Long memberId, Long productId) {
+        Optional<WishEntity> optionalWishEntity = wishRepository.findWishesByMemberEntityIdAndProductEntityId(memberId, productId);
+
+        return optionalWishEntity.map(WishEntity::getCount)
+                .orElse(0);
     }
 
     @Transactional(readOnly = true)
