@@ -52,8 +52,8 @@ public class OptionBuyingServiceTest {
     }
     @Test
     void 구매시_WISH_감소_테스트() {
-        ProductEntity productEntity = new ProductEntity(1L, "product1", 123, "path", Product.Status.READY);
-        OptionEntity optionEntity = new OptionEntity(1L, "option1", 123, productEntity);
+        ProductEntity productEntity = createProductEntity();
+        OptionEntity optionEntity = createOptionEntity(productEntity);
         OptionBuyingEntity optionBuyingEntity = new OptionBuyingEntity(1L, optionEntity, 123, "buying");
         optionBuyingEntity.prePersist();
         given(optionRepository.findById(any()))
@@ -61,23 +61,23 @@ public class OptionBuyingServiceTest {
         given(wishService.getWishCount(any(), any())).willReturn(10);
         given(optionBuyingRepository.save(any()))
                 .willReturn(optionBuyingEntity);
-        SocialMemberEntity memberEntity = new SocialMemberEntity(4L, 2L, SocialMember.Provider.KAKAO, "adsf", "asdf", "asdf", "adsf");
+        SocialMemberEntity memberEntity = createMemberEntity();
         given(commonMemberRepository.findById(eq(memberEntity.getId()))).willReturn(Optional.of(memberEntity));
         given(socialMemberRepository.findById(eq(memberEntity.getId()))).willReturn(Optional.of(memberEntity));
 
         optionBuyingService.buyOption(
-                4L,
+                memberEntity.getId(),
                 new OptionBuyingRequestDto(1L, 12, "buying")
         );
 
-        then(wishService).should().updateWishCount(eq(4L), eq(1L), eq(0));
+        then(wishService).should().updateWishCount(eq(memberEntity.getId()), eq(1L), eq(0));
     }
 
     @Test
     void 구매시_WISH_무시_테스트() {
-        ProductEntity productEntity = new ProductEntity(1L, "product1", 123, "path", Product.Status.READY);
-        OptionEntity optionEntity = new OptionEntity(1L, "option1", 123, productEntity);
-        OptionBuyingEntity optionBuyingEntity = new OptionBuyingEntity(1L, optionEntity, 123, "buying");
+        ProductEntity productEntity = createProductEntity();
+        OptionEntity optionEntity = createOptionEntity(productEntity);
+        OptionBuyingEntity optionBuyingEntity = createOptionBuyingEntity(optionEntity);
         optionBuyingEntity.prePersist();
         OptionBuyingRequestDto requestDto = new OptionBuyingRequestDto(1L, 10, "buying");
         given(optionRepository.findById(any()))
@@ -85,7 +85,7 @@ public class OptionBuyingServiceTest {
         given(wishService.getWishCount(any(), any())).willReturn(0);
         given(optionBuyingRepository.save(any()))
                 .willReturn(optionBuyingEntity);
-        SocialMemberEntity memberEntity = new SocialMemberEntity(4L, 2L, SocialMember.Provider.KAKAO, "adsf", "asdf", "asdf", "adsf");
+        SocialMemberEntity memberEntity = createMemberEntity();
         given(commonMemberRepository.findById(eq(memberEntity.getId()))).willReturn(Optional.of(memberEntity));
         given(socialMemberRepository.findById(eq(memberEntity.getId()))).willReturn(Optional.of(memberEntity));
 
@@ -99,15 +99,15 @@ public class OptionBuyingServiceTest {
 
     @Test
     void 구매_테스트() {
-        ProductEntity productEntity = new ProductEntity(1L, "product1", 123, "path", Product.Status.READY);
-        OptionEntity optionEntity = new OptionEntity(1L, "옵션", 20, productEntity);
+        ProductEntity productEntity = createProductEntity();
+        OptionEntity optionEntity = createOptionEntity(productEntity);
         given(optionRepository.findById(1L)).willReturn(Optional.of(optionEntity));
         given(wishService.getWishCount(any(), any())).willReturn(3);
-        OptionBuyingEntity optionBuyingEntity = new OptionBuyingEntity(1L, optionEntity, 123, "buying");
+        OptionBuyingEntity optionBuyingEntity = createOptionBuyingEntity(optionEntity);
         optionBuyingEntity.prePersist();
         given(optionBuyingRepository.save(any())).willReturn(optionBuyingEntity);
         OptionBuyingRequestDto request = new OptionBuyingRequestDto(1L, 5, "note");
-        SocialMemberEntity memberEntity = new SocialMemberEntity(4L, 2L, SocialMember.Provider.KAKAO, "adsf", "asdf", "asdf", "adsf");
+        SocialMemberEntity memberEntity = createMemberEntity();
         given(commonMemberRepository.findById(eq(memberEntity.getId()))).willReturn(Optional.of(memberEntity));
         given(socialMemberRepository.findById(eq(memberEntity.getId()))).willReturn(Optional.of(memberEntity));
 
@@ -132,13 +132,33 @@ public class OptionBuyingServiceTest {
 
     @Test
     void Option_수량_부족시_구매_테스트() {
-        ProductEntity productEntity = new ProductEntity(1L, "product1", 123, "path", Product.Status.READY);
-        OptionEntity option = new OptionEntity(1L, "부족 옵션", 3, productEntity);
+        ProductEntity productEntity = createProductEntity();
+        OptionEntity option = createOptionEntity(productEntity, 3);
         given(optionRepository.findById(1L)).willReturn(Optional.of(option));
 
         OptionBuyingRequestDto request = new OptionBuyingRequestDto(1L, 10, "fail");
 
         assertThrows(IllegalArgumentException.class,
                 () -> optionBuyingService.buyOption(1L, request));
+    }
+
+    private ProductEntity createProductEntity() {
+        return new ProductEntity(1L, "product1", 123, "path", Product.Status.READY);
+    }
+
+    private OptionEntity createOptionEntity(ProductEntity product) {
+        return createOptionEntity(product, 20);
+    }
+
+    private OptionEntity createOptionEntity(ProductEntity product, int quantity) {
+        return new OptionEntity(1L, "옵션", quantity, product);
+    }
+
+    private SocialMemberEntity createMemberEntity() {
+        return new SocialMemberEntity(4L, 2L, SocialMember.Provider.KAKAO, "adsf", "asdf", "asdf", "adsf");
+    }
+
+    private OptionBuyingEntity createOptionBuyingEntity(OptionEntity optionEntity) {
+        return new OptionBuyingEntity(1L, optionEntity, 123, "buying");
     }
 }
