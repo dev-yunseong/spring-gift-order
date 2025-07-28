@@ -1,10 +1,17 @@
 package gift.service;
 
+import gift.client.KakaoApiClient;
+import gift.domain.Product;
+import gift.domain.member.SocialMember;
 import gift.dto.OptionBuyingRequestDto;
 import gift.entity.OptionBuyingEntity;
 import gift.entity.OptionEntity;
+import gift.entity.ProductEntity;
+import gift.entity.member.SocialMemberEntity;
 import gift.repository.OptionBuyingRepository;
 import gift.repository.OptionRepository;
+import gift.repository.member.CommonMemberRepository;
+import gift.repository.member.SocialMemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,20 +39,31 @@ public class OptionBuyingServiceTest {
     private OptionService optionService;
     @Mock
     private WishService wishService;
+    @Mock
+    private KakaoApiClient kakaoApiClient;
+    @Mock
+    private SocialMemberRepository socialMemberRepository;
+    @Mock
+    private CommonMemberRepository commonMemberRepository;
 
     @BeforeEach
     void setup() {
-        optionBuyingService = new OptionBuyingService(optionBuyingRepository, optionRepository, optionService, wishService);
+        optionBuyingService = new OptionBuyingService(optionBuyingRepository, optionRepository, optionService, socialMemberRepository, commonMemberRepository, wishService, kakaoApiClient);
     }
     @Test
     void 구매시_WISH_감소_테스트() {
-        OptionEntity optionEntity = new OptionEntity(1L, "option1", 123, null);
+        ProductEntity productEntity = new ProductEntity(1L, "product1", 123, "path", Product.Status.READY);
+        OptionEntity optionEntity = new OptionEntity(1L, "option1", 123, productEntity);
         OptionBuyingEntity optionBuyingEntity = new OptionBuyingEntity(1L, optionEntity, 123, "buying");
+        optionBuyingEntity.prePersist();
         given(optionRepository.findById(any()))
                 .willReturn(Optional.of(optionEntity));
         given(wishService.getWishCount(any(), any())).willReturn(10);
         given(optionBuyingRepository.save(any()))
                 .willReturn(optionBuyingEntity);
+        SocialMemberEntity memberEntity = new SocialMemberEntity(4L, 2L, SocialMember.Provider.KAKAO, "adsf", "asdf", "asdf", "adsf");
+        given(commonMemberRepository.findById(eq(memberEntity.getId()))).willReturn(Optional.of(memberEntity));
+        given(socialMemberRepository.findById(eq(memberEntity.getId()))).willReturn(Optional.of(memberEntity));
 
         optionBuyingService.buyOption(
                 4L,
@@ -57,17 +75,22 @@ public class OptionBuyingServiceTest {
 
     @Test
     void 구매시_WISH_무시_테스트() {
-        OptionEntity optionEntity = new OptionEntity(1L, "option1", 123, null);
+        ProductEntity productEntity = new ProductEntity(1L, "product1", 123, "path", Product.Status.READY);
+        OptionEntity optionEntity = new OptionEntity(1L, "option1", 123, productEntity);
         OptionBuyingEntity optionBuyingEntity = new OptionBuyingEntity(1L, optionEntity, 123, "buying");
+        optionBuyingEntity.prePersist();
         OptionBuyingRequestDto requestDto = new OptionBuyingRequestDto(1L, 10, "buying");
         given(optionRepository.findById(any()))
                 .willReturn(Optional.of(optionEntity));
         given(wishService.getWishCount(any(), any())).willReturn(0);
         given(optionBuyingRepository.save(any()))
                 .willReturn(optionBuyingEntity);
+        SocialMemberEntity memberEntity = new SocialMemberEntity(4L, 2L, SocialMember.Provider.KAKAO, "adsf", "asdf", "asdf", "adsf");
+        given(commonMemberRepository.findById(eq(memberEntity.getId()))).willReturn(Optional.of(memberEntity));
+        given(socialMemberRepository.findById(eq(memberEntity.getId()))).willReturn(Optional.of(memberEntity));
 
         optionBuyingService.buyOption(
-                4L,
+                memberEntity.getId(),
                 requestDto
         );
 
@@ -76,17 +99,23 @@ public class OptionBuyingServiceTest {
 
     @Test
     void 구매_테스트() {
-        OptionEntity optionEntity = new OptionEntity(1L, "옵션", 20, null);
+        ProductEntity productEntity = new ProductEntity(1L, "product1", 123, "path", Product.Status.READY);
+        OptionEntity optionEntity = new OptionEntity(1L, "옵션", 20, productEntity);
         given(optionRepository.findById(1L)).willReturn(Optional.of(optionEntity));
         given(wishService.getWishCount(any(), any())).willReturn(3);
-        given(optionBuyingRepository.save(any())).willAnswer(inv -> inv.getArgument(0));
+        OptionBuyingEntity optionBuyingEntity = new OptionBuyingEntity(1L, optionEntity, 123, "buying");
+        optionBuyingEntity.prePersist();
+        given(optionBuyingRepository.save(any())).willReturn(optionBuyingEntity);
         OptionBuyingRequestDto request = new OptionBuyingRequestDto(1L, 5, "note");
+        SocialMemberEntity memberEntity = new SocialMemberEntity(4L, 2L, SocialMember.Provider.KAKAO, "adsf", "asdf", "asdf", "adsf");
+        given(commonMemberRepository.findById(eq(memberEntity.getId()))).willReturn(Optional.of(memberEntity));
+        given(socialMemberRepository.findById(eq(memberEntity.getId()))).willReturn(Optional.of(memberEntity));
 
-        optionBuyingService.buyOption(10L, request);
+        optionBuyingService.buyOption(memberEntity.getId(), request);
 
         then(optionService).should().subtractOptionQuantity(1L, 5);
         then(optionBuyingRepository).should().save(any());
-        then(wishService).should().updateWishCount(10L, 1L, 0);
+        then(wishService).should().updateWishCount(memberEntity.getId(), productEntity.getId(), 0);
     }
 
     @Test
@@ -103,7 +132,8 @@ public class OptionBuyingServiceTest {
 
     @Test
     void Option_수량_부족시_구매_테스트() {
-        OptionEntity option = new OptionEntity(1L, "부족 옵션", 3, null);
+        ProductEntity productEntity = new ProductEntity(1L, "product1", 123, "path", Product.Status.READY);
+        OptionEntity option = new OptionEntity(1L, "부족 옵션", 3, productEntity);
         given(optionRepository.findById(1L)).willReturn(Optional.of(option));
 
         OptionBuyingRequestDto request = new OptionBuyingRequestDto(1L, 10, "fail");

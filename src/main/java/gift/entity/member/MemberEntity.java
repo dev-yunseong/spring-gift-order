@@ -14,6 +14,10 @@ public class MemberEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
 
+    public Long getId() {
+        return id;
+    }
+
     @OneToMany(mappedBy = "memberEntity")
     protected List<WishEntity> wishEntities;
 
