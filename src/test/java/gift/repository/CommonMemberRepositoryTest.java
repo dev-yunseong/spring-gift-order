@@ -41,7 +41,7 @@ public class CommonMemberRepositoryTest {
     @Test
     void Kakao_Member_가져오기_테스트() {
         SocialMemberEntity kakaoMemberEntity =
-                new SocialMemberEntity(null, 123L, SocialMember.Provider.KAKAO, "member", "path");
+                new SocialMemberEntity(null, 123L, SocialMember.Provider.KAKAO, "member", "path", "access-token", "refresh-token");
         SocialMemberEntity savedKakaoMemberEntity = socialMemberRepository.save(kakaoMemberEntity);
 
         Optional<MemberEntity> member = commonMemberRepository.findById(savedKakaoMemberEntity.toDomain().getId());

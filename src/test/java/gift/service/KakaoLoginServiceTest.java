@@ -43,9 +43,9 @@ class KakaoLoginServiceTest {
         given(kakaoApiClient.requestAccessToken(any()))
                 .willReturn(fakeToken);
 
-        String token = kakaoLoginService.getAccessToken("authorize-code");
+        KakaoTokenResponseDto token = kakaoLoginService.getTokens("authorize-code");
 
-        assertThat(token).isEqualTo("access-token");
+        assertThat(token.accessToken()).isEqualTo("access-token");
     }
 
     @Test
@@ -53,17 +53,17 @@ class KakaoLoginServiceTest {
         given(kakaoApiClient.requestAccessToken(any())).willReturn(null);
 
         assertThrows(IllegalStateException.class,
-                () -> kakaoLoginService.getAccessToken("auth-code"));
+                () -> kakaoLoginService.getTokens("auth-code"));
     }
 
     @Test
     void Kakao_Member_테스트() {
         KakaoUserInfoResponseDto dto = new KakaoUserInfoResponseDto(12345L, "nickname", "/path/to/image");
-        SocialMember expected = new SocialMember(null, 12345L, SocialMember.Provider.KAKAO, "nickname", "/path/to/image");
+        SocialMember expected = new SocialMember(null, 12345L, SocialMember.Provider.KAKAO, "nickname", "/path/to/image", "access-token", "refresh-token");
         given(kakaoApiClient.requestSocialMember(any()))
                 .willReturn(dto);
 
-        SocialMember result = kakaoLoginService.getSocialMember("access-token");
+        SocialMember result = kakaoLoginService.getSocialMember("access-token", "refresh-token");
 
         assertThat(result.getProviderId()).isEqualTo(expected.getProviderId());
     }
@@ -74,7 +74,7 @@ class KakaoLoginServiceTest {
                 .willReturn(null);
 
         assertThrows(IllegalStateException.class,
-                () -> kakaoLoginService.getSocialMember("access-token"));
+                () -> kakaoLoginService.getSocialMember("access-token", "refresh-token"));
     }
 }
 
