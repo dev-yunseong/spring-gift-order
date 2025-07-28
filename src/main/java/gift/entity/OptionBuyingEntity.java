@@ -1,5 +1,6 @@
 package gift.entity;
 
+import gift.domain.OptionBuying;
 import gift.dto.OptionBuyingRequestDto;
 import jakarta.persistence.*;
 
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 public class OptionBuyingEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     public Long getId() {
@@ -31,7 +33,7 @@ public class OptionBuyingEntity {
         return quantity;
     }
 
-    @Column(name = "created_at", insertable = false)
+    @Column(name = "created_at")
     private LocalDateTime orderDateTime;
 
     public LocalDateTime getOrderDateTime() {
@@ -43,6 +45,12 @@ public class OptionBuyingEntity {
 
     public String getMessage() {
         return message;
+    }
+
+
+    @PrePersist
+    public void prePersist() {
+        this.orderDateTime = LocalDateTime.now();
     }
 
     protected OptionBuyingEntity() {}
@@ -61,6 +69,17 @@ public class OptionBuyingEntity {
                 optionBuyingRequestDto.quantity(),
                 optionBuyingRequestDto.message()
                 );
+    }
+
+    public OptionBuying toDomain() {
+        return new OptionBuying(
+                id,
+                optionEntity.getProductEntity().toDomain(),
+                optionEntity.toDomain(),
+                quantity,
+                orderDateTime,
+                message
+        );
     }
 
 }
