@@ -40,3 +40,11 @@ CREATE TABLE options (
     quantity INT NOT NULL DEFAULT 1,
     UNIQUE (product_id, name)
 );
+
+CREATE TABLE option_buyings (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    option_id BIGINT NOT NULL REFERENCES options(id),
+    quantity INT NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW(),
+    message VARCHAR(255)
+);
