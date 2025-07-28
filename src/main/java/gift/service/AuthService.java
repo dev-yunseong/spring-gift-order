@@ -38,7 +38,7 @@ public class AuthService {
 
     public AuthResponseDto registerOrLoginKakao(String authorizeCode) {
         String accessToken = kakaoLoginService.getAccessToken(authorizeCode);
-        SocialMember socialMember = kakaoLoginService.getKakaoMember(accessToken);
+        SocialMember socialMember = kakaoLoginService.getSocialMember(accessToken);
         Member member = socialMemberService.registerOrLogin(socialMember);
         String token = jwtTokenProvider.makeJwtToken(member.getId());
         return new AuthResponseDto(token);
