@@ -1,6 +1,6 @@
 package gift.service;
 
-import gift.domain.member.KakaoMember;
+import gift.domain.member.SocialMember;
 import gift.dto.KakaoTokenResponseDto;
 import gift.dto.KakaoUserInfoResponseDto;
 import org.springframework.beans.factory.annotation.Value;
@@ -66,7 +66,7 @@ public class KakaoLoginService {
         return kakaoTokenResponseDto.accessToken();
     }
 
-    public KakaoMember getKakaoMember(String accessToken) {
+    public SocialMember getKakaoMember(String accessToken) {
         RestClient.ResponseSpec responseSpec = restClient.post()
                 .uri(KAKAO_USER_INFO_URL)
                 .header(HttpHeaders.AUTHORIZATION, TOKEN_PREFIX + accessToken)

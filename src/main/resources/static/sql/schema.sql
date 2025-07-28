@@ -16,11 +16,13 @@ CREATE TABLE email_members (
     password_hash CHAR(60) NOT NULL
 );
 
-CREATE TABLE kakao_members (
+CREATE TABLE social_members (
     id BIGINT PRIMARY KEY REFERENCES members(id),
-    kakao_id BIGINT NOT NULL UNIQUE,
+    provider_id BIGINT NOT NULL UNIQUE,
+    provider VARCHAR(30) NOT NULL,
     nickname VARCHAR(30) NOT NULL UNIQUE,
-    profile_image VARCHAR(255) NOT NULL
+    profile_image VARCHAR(255) NOT NULL,
+    UNIQUE (provider_id, provider)
 );
 
 CREATE TABLE wishes (

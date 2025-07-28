@@ -1,11 +1,12 @@
 package gift.repository;
 
+import gift.domain.member.SocialMember;
 import gift.entity.member.EmailMemberEntity;
-import gift.entity.member.KakaoMemberEntity;
+import gift.entity.member.SocialMemberEntity;
 import gift.entity.member.MemberEntity;
 import gift.repository.member.CommonMemberRepository;
 import gift.repository.member.EmailMemberRepository;
-import gift.repository.member.KakaoMemberRepository;
+import gift.repository.member.SocialMemberRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -21,7 +22,7 @@ public class CommonMemberRepositoryTest {
     private EmailMemberRepository emailMemberRepository;
 
     @Autowired
-    private KakaoMemberRepository kakaoMemberRepository;
+    private SocialMemberRepository socialMemberRepository;
 
     @Autowired
     private CommonMemberRepository commonMemberRepository;
@@ -39,9 +40,9 @@ public class CommonMemberRepositoryTest {
 
     @Test
     void Kakao_Member_가져오기_테스트() {
-        KakaoMemberEntity kakaoMemberEntity =
-                new KakaoMemberEntity(null, 123L, "member", "path");
-        KakaoMemberEntity savedKakaoMemberEntity = kakaoMemberRepository.save(kakaoMemberEntity);
+        SocialMemberEntity kakaoMemberEntity =
+                new SocialMemberEntity(null, 123L, SocialMember.Provider.KAKAO, "member", "path");
+        SocialMemberEntity savedKakaoMemberEntity = socialMemberRepository.save(kakaoMemberEntity);
 
         Optional<MemberEntity> member = commonMemberRepository.findById(savedKakaoMemberEntity.toDomain().getId());
 

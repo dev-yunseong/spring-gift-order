@@ -1,7 +1,7 @@
 package gift.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import gift.domain.member.KakaoMember;
+import gift.domain.member.SocialMember;
 
 import java.time.LocalDateTime;
 
@@ -58,10 +58,11 @@ public class KakaoUserInfoResponseDto {
         }
     }
 
-    public KakaoMember toDomain() {
-        return new KakaoMember(
+    public SocialMember toDomain() {
+        return new SocialMember(
                 null,
                 id,
+                SocialMember.Provider.KAKAO,
                 kakaoAccount.profile.nickname,
                 kakaoAccount.profile.profileImageUrl);
     }

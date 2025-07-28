@@ -1,6 +1,6 @@
 package gift.service;
 
-import gift.domain.member.KakaoMember;
+import gift.domain.member.SocialMember;
 import gift.dto.KakaoTokenResponseDto;
 import gift.dto.KakaoUserInfoResponseDto;
 import org.junit.jupiter.api.BeforeEach;
@@ -76,13 +76,13 @@ class KakaoLoginServiceTest {
     @Test
     void Kakao_Member_테스트() {
         KakaoUserInfoResponseDto dto = new KakaoUserInfoResponseDto(12345L, "nickname", "/path/to/image");
-        KakaoMember expected = new KakaoMember(null, 12345L, "nickname", "/path/to/image");
+        SocialMember expected = new SocialMember(null, 12345L, SocialMember.Provider.KAKAO, "nickname", "/path/to/image");
         given(mockResponseSpec.toEntity(KakaoUserInfoResponseDto.class))
                 .willReturn(new ResponseEntity<>(dto, HttpStatus.OK));
 
-        KakaoMember result = kakaoLoginService.getKakaoMember("access-token");
+        SocialMember result = kakaoLoginService.getKakaoMember("access-token");
 
-        assertThat(result.getKakaoId()).isEqualTo(expected.getKakaoId());
+        assertThat(result.getProviderId()).isEqualTo(expected.getProviderId());
     }
 
     @Test
