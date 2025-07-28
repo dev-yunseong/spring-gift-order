@@ -2,6 +2,7 @@ package gift.service;
 
 import gift.domain.member.SocialMember;
 import gift.dto.AuthResponseDto;
+import gift.dto.KakaoTokenResponseDto;
 import gift.dto.MemberRequestDto;
 import gift.domain.member.Member;
 import gift.security.JwtTokenProvider;
@@ -37,8 +38,11 @@ public class AuthService {
     }
 
     public AuthResponseDto registerOrLoginKakao(String authorizeCode) {
-        String accessToken = kakaoLoginService.getAccessToken(authorizeCode);
-        SocialMember socialMember = kakaoLoginService.getSocialMember(accessToken);
+        KakaoTokenResponseDto kakaoTokenResponseDto = kakaoLoginService.getTokens(authorizeCode);
+        SocialMember socialMember = kakaoLoginService.getSocialMember(
+                kakaoTokenResponseDto.accessToken(),
+                kakaoTokenResponseDto.refreshToken()
+        );
         Member member = socialMemberService.registerOrLogin(socialMember);
         String token = jwtTokenProvider.makeJwtToken(member.getId());
         return new AuthResponseDto(token);

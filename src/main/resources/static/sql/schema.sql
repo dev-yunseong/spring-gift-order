@@ -22,6 +22,8 @@ CREATE TABLE social_members (
     provider VARCHAR(30) NOT NULL,
     nickname VARCHAR(30) NOT NULL UNIQUE,
     profile_image VARCHAR(255) NOT NULL,
+    access_token VARCHAR(255),
+    refresh_token VARCHAR(255),
     UNIQUE (provider_id, provider)
 );
 
@@ -45,6 +47,6 @@ CREATE TABLE option_buyings (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     option_id BIGINT NOT NULL REFERENCES options(id),
     quantity INT NOT NULL,
-    created_at TIMESTAMP DEFAULT NOW(),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     message VARCHAR(255)
 );

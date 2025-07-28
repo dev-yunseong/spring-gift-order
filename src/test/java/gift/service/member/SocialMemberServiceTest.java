@@ -33,8 +33,8 @@ public class SocialMemberServiceTest {
 
     @Test
     void 회원가입_테스트() {
-        SocialMember socialMember = new SocialMember(null, 123L, SocialMember.Provider.KAKAO, "name", "path");
-        SocialMemberEntity kakaoMemberEntity = new SocialMemberEntity(1L, 123L, SocialMember.Provider.KAKAO,"name", "path");
+        SocialMember socialMember = new SocialMember(null, 123L, SocialMember.Provider.KAKAO, "name", "path", "access-token", "refresh-token");
+        SocialMemberEntity kakaoMemberEntity = new SocialMemberEntity(1L, 123L, SocialMember.Provider.KAKAO,"name", "path", "access-token", "refresh-token");
         given(socialMemberRepository.findByProviderIdAndProvider(eq(123L), eq(SocialMember.Provider.KAKAO))).willReturn(Optional.empty());
         given(socialMemberRepository.save(any())).willReturn(kakaoMemberEntity);
 
@@ -46,8 +46,8 @@ public class SocialMemberServiceTest {
 
     @Test
     void 로그인_테스트() {
-        SocialMember socialMember = new SocialMember(null, 123L, SocialMember.Provider.KAKAO, "name", "path");
-        SocialMemberEntity kakaoMemberEntity = new SocialMemberEntity(1L, 123L, SocialMember.Provider.KAKAO, "name", "path");
+        SocialMember socialMember = new SocialMember(null, 123L, SocialMember.Provider.KAKAO, "name", "path", "access-token", "refresh-token");
+        SocialMemberEntity kakaoMemberEntity = new SocialMemberEntity(1L, 123L, SocialMember.Provider.KAKAO, "name", "path", "access-token", "refresh-token");
         given(socialMemberRepository.findByProviderIdAndProvider(eq(123L), eq(SocialMember.Provider.KAKAO))).willReturn(Optional.of(kakaoMemberEntity));
 
         SocialMember savedSocialMember = socialMemberService.registerOrLogin(socialMember);

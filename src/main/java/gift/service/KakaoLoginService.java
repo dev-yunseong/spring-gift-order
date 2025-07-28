@@ -25,23 +25,26 @@ public class KakaoLoginService {
         return kakaoAuthorizeUrl;
     }
 
-    public String getAccessToken(String authorizeCode) {
+    public KakaoTokenResponseDto getTokens(String authorizeCode) {
         KakaoTokenResponseDto kakaoTokenResponseDto = kakaoApiClient.requestAccessToken(authorizeCode);
 
         if (kakaoTokenResponseDto == null) {
             throw new IllegalStateException("Fail Kakao Login");
         }
 
-        return kakaoTokenResponseDto.accessToken();
+        return kakaoTokenResponseDto;
     }
 
-    public SocialMember getSocialMember(String accessToken) {
+    public SocialMember getSocialMember(String accessToken, String refreshToken) {
        KakaoUserInfoResponseDto kakaoUserInfoResponseDto = kakaoApiClient.requestSocialMember(accessToken);
 
         if (kakaoUserInfoResponseDto == null) {
             throw new IllegalStateException("Fail Kakao Login");
         }
 
-        return kakaoUserInfoResponseDto.toDomain();
+        return kakaoUserInfoResponseDto.toDomain(
+                accessToken,
+                refreshToken
+        );
     }
 }

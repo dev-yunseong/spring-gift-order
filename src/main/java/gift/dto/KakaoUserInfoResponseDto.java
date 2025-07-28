@@ -58,12 +58,14 @@ public class KakaoUserInfoResponseDto {
         }
     }
 
-    public SocialMember toDomain() {
+    public SocialMember toDomain(String accessToken, String refreshToken) {
         return new SocialMember(
                 null,
                 id,
                 SocialMember.Provider.KAKAO,
                 kakaoAccount.profile.nickname,
-                kakaoAccount.profile.profileImageUrl);
+                kakaoAccount.profile.profileImageUrl,
+                accessToken,
+                refreshToken);
     }
 }
