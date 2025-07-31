@@ -16,11 +16,15 @@ CREATE TABLE email_members (
     password_hash CHAR(60) NOT NULL
 );
 
-CREATE TABLE kakao_members (
+CREATE TABLE social_members (
     id BIGINT PRIMARY KEY REFERENCES members(id),
-    kakao_id BIGINT NOT NULL UNIQUE,
+    provider_id BIGINT NOT NULL UNIQUE,
+    provider VARCHAR(30) NOT NULL,
     nickname VARCHAR(30) NOT NULL UNIQUE,
-    profile_image VARCHAR(255) NOT NULL
+    profile_image VARCHAR(255) NOT NULL,
+    access_token VARCHAR(255),
+    refresh_token VARCHAR(255),
+    UNIQUE (provider_id, provider)
 );
 
 CREATE TABLE wishes (
@@ -37,4 +41,12 @@ CREATE TABLE options (
     name VARCHAR(50) NOT NULL,
     quantity INT NOT NULL DEFAULT 1,
     UNIQUE (product_id, name)
+);
+
+CREATE TABLE option_buyings (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    option_id BIGINT NOT NULL REFERENCES options(id),
+    quantity INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    message VARCHAR(255)
 );
