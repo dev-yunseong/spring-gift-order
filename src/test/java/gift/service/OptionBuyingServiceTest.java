@@ -55,7 +55,7 @@ public class OptionBuyingServiceTest {
         ProductEntity productEntity = createProductEntity();
         OptionEntity optionEntity = createOptionEntity(productEntity);
         OptionBuyingEntity optionBuyingEntity = new OptionBuyingEntity(1L, optionEntity, 123, "buying");
-        optionBuyingEntity.prePersist();
+        optionBuyingEntity.setOrderDateTimeToNow();
         given(optionRepository.findById(any()))
                 .willReturn(Optional.of(optionEntity));
         given(wishService.getWishCount(any(), any())).willReturn(10);
@@ -78,7 +78,7 @@ public class OptionBuyingServiceTest {
         ProductEntity productEntity = createProductEntity();
         OptionEntity optionEntity = createOptionEntity(productEntity);
         OptionBuyingEntity optionBuyingEntity = createOptionBuyingEntity(optionEntity);
-        optionBuyingEntity.prePersist();
+        optionBuyingEntity.setOrderDateTimeToNow();
         OptionBuyingRequestDto requestDto = new OptionBuyingRequestDto(1L, 10, "buying");
         given(optionRepository.findById(any()))
                 .willReturn(Optional.of(optionEntity));
@@ -104,7 +104,7 @@ public class OptionBuyingServiceTest {
         given(optionRepository.findById(1L)).willReturn(Optional.of(optionEntity));
         given(wishService.getWishCount(any(), any())).willReturn(3);
         OptionBuyingEntity optionBuyingEntity = createOptionBuyingEntity(optionEntity);
-        optionBuyingEntity.prePersist();
+        optionBuyingEntity.setOrderDateTimeToNow();
         given(optionBuyingRepository.save(any())).willReturn(optionBuyingEntity);
         OptionBuyingRequestDto request = new OptionBuyingRequestDto(1L, 5, "note");
         SocialMemberEntity memberEntity = createMemberEntity();

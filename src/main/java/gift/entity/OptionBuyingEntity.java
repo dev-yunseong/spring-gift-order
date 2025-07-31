@@ -3,6 +3,7 @@ package gift.entity;
 import gift.domain.OptionBuying;
 import gift.dto.OptionBuyingRequestDto;
 import jakarta.persistence.*;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
 
@@ -34,6 +35,7 @@ public class OptionBuyingEntity {
     }
 
     @Column(name = "created_at")
+    @CreatedDate
     private LocalDateTime orderDateTime;
 
     public LocalDateTime getOrderDateTime() {
@@ -47,9 +49,8 @@ public class OptionBuyingEntity {
         return message;
     }
 
-
-    @PrePersist
-    public void prePersist() {
+    // for test code
+    public void setOrderDateTimeToNow() {
         this.orderDateTime = LocalDateTime.now();
     }
 
