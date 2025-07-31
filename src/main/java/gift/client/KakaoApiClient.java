@@ -77,7 +77,6 @@ public class KakaoApiClient {
         try {
             String jsonString = objectMapper.writeValueAsString(kakaoTemplateObjectDto);
             formData.add("template_object", jsonString);
-            System.out.println(jsonString);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
