@@ -43,10 +43,6 @@ public class OptionBuyingService {
         OptionEntity optionEntity = optionRepository.findById(optionBuyingRequestDto.optionId())
                 .orElseThrow(() -> new IllegalArgumentException("Option Not Found"));
 
-        if (optionEntity.getQuantity() < optionBuyingRequestDto.quantity()) {
-            throw new IllegalArgumentException("Insufficient quantity available");
-        }
-
         optionService.subtractOptionQuantity(
                 optionBuyingRequestDto.optionId(),
                 optionBuyingRequestDto.quantity()
