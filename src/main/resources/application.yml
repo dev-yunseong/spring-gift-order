@@ -1,6 +1,6 @@
 server:
-  port: 8080
-  url: http://localhost:8080
+  port: ${PORT:8080}
+  url: ${SERVER_URL:http://localhost:8080}
 
 spring:
   application:
@@ -34,5 +34,5 @@ spring:
 jwt:
   secretKey: Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E=
 kakao:
-  rest-api-key: [user-rest-api-key]
-  redirect-url: http://localhost:8080/oauth/kakao/callback
+  rest-api-key: ${KAKAO_REST_API_KEY:your-api-key}
+  redirect-url: ${KAKAO_REDIRECT_URL:http://localhost:8080/oauth/kakao/callback}
